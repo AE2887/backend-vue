@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    image: node:18
+    container_name: backend
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+      - ./backend/.env:/usr/src/app/.env  # Montar el archivo .env
+    ports:
+      - "3000:3000"
+    command: npm run dev
+    environment:
+      - PORT=3000
+      - DB_HOST=mysqldb
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=user_crud
+    networks:
+      - mynetwork
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqldb
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=user_crud
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+volumes:
+  mysql-data:
+
+networks:
+  mynetwork:
